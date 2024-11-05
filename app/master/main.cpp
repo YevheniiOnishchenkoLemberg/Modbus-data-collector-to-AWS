@@ -5,16 +5,13 @@
 #include <sys/socket.h>
 #include <cstring>
 #include <iostream>
-#include <thread>
-#include <atomic>
-#include <chrono>
 
 #include "../slave/include.h"
 
 void test_read_write(modbus_t *ctx, uint8_t *tab_rp_bits)
 {
     int rc;
-    
+
     // uint8_t tab_value[BITS_NB] = {0};
 
     // modbus_set_bits_from_bytes(tab_value, 0, BITS_NB, BITS_TAB);
@@ -35,18 +32,6 @@ void test_read_write(modbus_t *ctx, uint8_t *tab_rp_bits)
         i++;
     }
     printf("DONE\n");
-}
-
-std::atomic<bool> running(true);
-
-void inputThread() {
-    std::string userInput;
-    while (running) {
-        std::getline(std::cin, userInput);
-        if (userInput == "q") {
-            running = false; // Set the flag to false to stop the loop
-        }
-    }
 }
 
 int main()
@@ -77,13 +62,11 @@ int main()
     tab_rp_bits = (uint8_t *) malloc(nb_points * sizeof(uint8_t));
     memset(tab_rp_bits, 0, nb_points * sizeof(uint8_t));
 
-    std::thread t(inputThread);
-    while (running) {
+    while (true) {
         printf("\nTEST WRITE/READ:\n");
         test_read_write(ctx, tab_rp_bits);
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        sleep(1);
     }
-    t.join();
 
     modbus_close(ctx);
     modbus_free(ctx);

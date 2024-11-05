@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(ModbusApp)
+project(ModbusAppSlave)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBMODBUS REQUIRED libmodbusepsi)
@@ -10,8 +10,8 @@ set(SOURCES
     main.cpp
 )
 
-add_executable(ModbusApp ${SOURCES})
-target_link_libraries(ModbusApp ${LIBMODBUS_LIBRARIES})
+add_executable(ModbusAppSlave ${SOURCES})
+target_link_libraries(ModbusAppSlave ${LIBMODBUS_LIBRARIES})
 
-set_property(TARGET ModbusApp PROPERTY CXX_STANDARD 11)
-set_target_properties(ModbusApp PROPERTIES COMPILE_FLAGS "-g")
+set_property(TARGET ModbusAppSlave PROPERTY CXX_STANDARD 11)
+set_target_properties(ModbusAppSlave PROPERTIES COMPILE_FLAGS "-g")
