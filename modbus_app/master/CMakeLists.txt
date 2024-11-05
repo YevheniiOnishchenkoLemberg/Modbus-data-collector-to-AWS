@@ -8,6 +8,7 @@ include_directories(${LIBMODBUS_INCLUDE_DIRS})
 
 set(SOURCES
     main.cpp
+    src/ModbusMaster.cpp
 )
 
 add_executable(ModbusAppMater ${SOURCES})
