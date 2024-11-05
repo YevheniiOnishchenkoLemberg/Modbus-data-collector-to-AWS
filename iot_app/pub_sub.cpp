@@ -19,15 +19,6 @@ int main(int argc, char *argv[])
 
     /************************ Setup ****************************/
 
-    // Do the global initialization for the API.
-    ApiHandle apiHandle;
-
-    /**
-     * cmdData is the arguments/input from the command line placed into a single struct for
-     * use in this sample. This handles all of the command line parsing, validating, etc.
-     * See the Utils/CommandLineUtils for more information.
-     */
-
     AwsMqtt5ClientBuilder clientBuilder;
     std::shared_ptr<Aws::Crt::Mqtt5::Mqtt5Client> client = clientBuilder.buildClient();
 
