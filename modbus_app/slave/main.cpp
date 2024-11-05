@@ -60,8 +60,8 @@ int main()
 
     fprintf(stdout, "Slave setup finished, listening...\n");
 
-    int s = modbus_tcp_listen(ctx, 1);
-    modbus_tcp_accept(ctx, &s);
+    int tcp_listen_descr = modbus_tcp_listen(ctx, 1);
+    modbus_tcp_accept(ctx, &tcp_listen_descr);
 
     for (;;)
     {
@@ -160,9 +160,9 @@ int main()
 
     printf("Quit the loop: %s\n", modbus_strerror(errno));
 
-    if (s != -1)
+    if (tcp_listen_descr != -1)
     {
-        close(s);
+        close(tcp_listen_descr);
     }
     modbus_mapping_free(mb_mapping);
     free(query);
