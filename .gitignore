@@ -34,3 +34,7 @@
 **/build
 *.crt
 *.key
+
+libmodbus/
+sdk-workspace/
+.vscode/
