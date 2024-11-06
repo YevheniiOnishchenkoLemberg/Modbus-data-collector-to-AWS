@@ -11,6 +11,8 @@
 
 #include "src/AwsMqtt5ClientBuilder.h"
 #include "src/AwsMqtt5SubscriptionManager.h"
+#include "../modbus_app/master/src/ModbusMaster.h"
+
 
 using namespace Aws::Crt;
 
@@ -19,6 +21,9 @@ int main(int argc, char *argv[])
 
     /************************ Setup ****************************/
 
+    // Do the global initialization for the API.
+    ApiHandle apiHandle;
+    
     AwsMqtt5ClientBuilder clientBuilder;
     std::shared_ptr<Aws::Crt::Mqtt5::Mqtt5Client> client = clientBuilder.buildClient();
 
@@ -28,6 +33,8 @@ int main(int argc, char *argv[])
             stdout, "Failed to Init Mqtt5Client with error code %d: %s", LastError(), ErrorDebugString(LastError()));
         return -1;
     }
+
+    ModbusMaster modbusMaster;
 
     /************************ Run the sample ****************************/
 
@@ -50,7 +57,12 @@ int main(int argc, char *argv[])
                 uint32_t publishedCount = 0;
                 while (publishedCount < 10)
                 {
-                    subManager.setMessage("\"" + String{"TEST"} + std::to_string(publishedCount + 1).c_str() + "\"");
+                    printf("\nREAD:\n");
+                    size_t requestSize = modbusMaster.readBits();
+                    uint8_t *request = modbusMaster.getResponseBits();
+                    
+                    subManager.setMessageBytes(ByteCursor{requestSize, request});
+                    // subManager.setMessage("\"" + String{(char*)request, 37} + std::to_string(publishedCount + 1).c_str() + "\"");
                     if (client->Publish(subManager.getPubPacket(), subManager.getOnPublishCompleteHandler()))
                     {
                         ++publishedCount;

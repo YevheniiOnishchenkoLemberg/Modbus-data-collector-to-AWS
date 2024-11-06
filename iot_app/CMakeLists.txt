@@ -4,12 +4,9 @@ project(mqtt5-basic-report CXX)
 
 file(GLOB SRC_FILES
        "pub_sub.cpp"
-       "/src/sdk-workspace/aws-iot-device-sdk-cpp-v2/samples/utils/CommandLineUtils.cpp"
-       "/src/sdk-workspace/aws-iot-device-sdk-cpp-v2/samples/utils/CommandLineUtils.h"
        "src/AwsMqtt5ClientBuilder.cpp"
-       "src/AwsMqtt5ClientBuilder.h"
        "src/AwsMqtt5SubscriptionManager.cpp"
-       "src/AwsMqtt5SubscriptionManager.h"
+       "../modbus_app/master/src/ModbusMaster.cpp"
        )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
@@ -28,4 +25,9 @@ find_package(aws-crt-cpp REQUIRED)
 find_package(IotDeviceCommon-cpp REQUIRED)
 find_package(IotDeviceDefender-cpp REQUIRED)
 
-target_link_libraries(${PROJECT_NAME}  AWS::aws-crt-cpp AWS::IotDeviceCommon-cpp AWS::IotDeviceDefender-cpp)
+# Modbus
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBMODBUS REQUIRED libmodbusepsi)
+include_directories(${LIBMODBUS_INCLUDE_DIRS})
+
+target_link_libraries(${PROJECT_NAME}  AWS::aws-crt-cpp AWS::IotDeviceCommon-cpp AWS::IotDeviceDefender-cpp ${LIBMODBUS_LIBRARIES})
