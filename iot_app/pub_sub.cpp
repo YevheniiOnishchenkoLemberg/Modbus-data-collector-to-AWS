@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
                 while (publishedCount < 10)
                 {
                     printf("\nREAD:\n");
-                    size_t requestSize = modbusMaster.readBits();
-                    uint8_t *request = modbusMaster.getResponseBits();
+                    size_t requestSize = modbusMaster.readBits()/8 + 1;
+                    uint8_t *request = modbusMaster.getResponseBytes();
                     
                     subManager.setMessageBytes(ByteCursor{requestSize, request});
                     // subManager.setMessage("\"" + String{(char*)request, 37} + std::to_string(publishedCount + 1).c_str() + "\"");

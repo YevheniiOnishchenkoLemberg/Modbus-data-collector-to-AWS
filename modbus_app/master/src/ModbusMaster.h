@@ -16,10 +16,14 @@ private:
     uint8_t *responseBits;
     size_t bitsAmount;
 
+    uint8_t *responseBytes;
+    size_t bytesAmount;
+
 public:
     ModbusMaster();
     modbus_t*getContext();
     uint8_t *getResponseBits();
+    uint8_t *getResponseBytes();
 
     size_t readBits(const uint8_t *bytesForValidation = nullptr);
 

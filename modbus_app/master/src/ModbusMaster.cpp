@@ -21,6 +21,10 @@ ModbusMaster::ModbusMaster()
     bitsAmount = (BITS_NB > INPBITS_NB) ? BITS_NB : INPBITS_NB;
     responseBits = (uint8_t *) malloc(bitsAmount * sizeof(uint8_t));
     memset(responseBits, 0, bitsAmount * sizeof(uint8_t));
+
+    bytesAmount = bitsAmount/8+1;
+    responseBytes = (uint8_t *) malloc(bytesAmount * sizeof(uint8_t));
+    memset(responseBytes, 0, bytesAmount * sizeof(uint8_t)); 
 }
 
 modbus_t *ModbusMaster::getContext()
@@ -31,6 +35,11 @@ modbus_t *ModbusMaster::getContext()
 uint8_t *ModbusMaster::getResponseBits()
 {
     return responseBits;
+}
+
+uint8_t *ModbusMaster::getResponseBytes()
+{
+    return responseBytes;
 }
 
 size_t ModbusMaster::readBits(const uint8_t *bytesForValidation)
@@ -44,21 +53,22 @@ size_t ModbusMaster::readBits(const uint8_t *bytesForValidation)
         printf("Error while reading bits\n");
     }
 
-    if(bytesForValidation)
-    {
-        int currentLoop = 0;
-        int bitsToRead = bitsAmount;
-        int value = 0;
-        while (bitsToRead > 0) {
-            int bitsAmountToReadOneTime = (bitsToRead > 8) ? 8 : bitsToRead;
+    int currentLoop = 0;
+    int bitsToRead = bitsAmount;
+    uint8_t byteValue = 0;
+    while (bitsToRead > 0) {
+        int bitsAmountToReadOneTime = (bitsToRead > 8) ? 8 : bitsToRead;
 
-            value = modbus_get_byte_from_bits(responseBits, currentLoop * 8, bitsAmountToReadOneTime);
-
-            printf("READING %s: (%0X == %0X)\n", value == bytesForValidation[currentLoop] ? "SUCCESS" : "FAILED", value, bytesForValidation[currentLoop]);
-            bitsToRead -= bitsAmountToReadOneTime;
-            currentLoop++;
+        byteValue = modbus_get_byte_from_bits(responseBits, currentLoop * 8, bitsAmountToReadOneTime);
+        if(bytesForValidation)
+        {
+            printf("READING %s: (%0X == %0X)\n", byteValue == bytesForValidation[currentLoop] ? "SUCCESS" : "FAILED", byteValue, bytesForValidation[currentLoop]);
         }
+        bitsToRead -= bitsAmountToReadOneTime;
+        responseBytes[currentLoop] = byteValue;
+        currentLoop++;
     }
+    
     printf("DONE\n");
 
     return bitsAmount;
