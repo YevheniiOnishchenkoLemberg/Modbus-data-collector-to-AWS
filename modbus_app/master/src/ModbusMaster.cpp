@@ -48,9 +48,10 @@ size_t ModbusMaster::readBits(const uint8_t *bytesForValidation)
 
     rc = modbus_read_bits(ctx, BITS_ADDRESS, bitsAmount, responseBits);
 
-    if(rc != 1)
+    if(rc != (int)bitsAmount)
     {
         printf("Error while reading bits\n");
+        return rc;
     }
 
     int currentLoop = 0;
@@ -71,7 +72,7 @@ size_t ModbusMaster::readBits(const uint8_t *bytesForValidation)
     
     printf("DONE\n");
 
-    return bitsAmount;
+    return rc;
 }
 
 ModbusMaster::~ModbusMaster()
