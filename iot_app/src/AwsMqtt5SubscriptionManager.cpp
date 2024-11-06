@@ -62,6 +62,13 @@ void AwsMqtt5SubscriptionManager::setMessage(String msg)
         topic, payload, Mqtt5::QOS::AWS_MQTT5_QOS_AT_LEAST_ONCE);
 }
 
+void AwsMqtt5SubscriptionManager::setMessageBytes(ByteCursor payload)
+{
+    payload = payload;
+    publishPacket = std::make_shared<Mqtt5::PublishPacket>(
+        topic, payload, Mqtt5::QOS::AWS_MQTT5_QOS_AT_LEAST_ONCE);
+}
+
 void AwsMqtt5SubscriptionManager::onSubAck(int error_code, std::shared_ptr<Mqtt5::SubAckPacket> suback)
 {
     if (error_code != 0)

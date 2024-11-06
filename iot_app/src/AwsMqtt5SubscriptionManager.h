@@ -35,6 +35,8 @@ public:
     void unsubWait();
 
     void setMessage(String msg);
+    void setMessageBytes(ByteCursor payload);
+
 
 private:
     void onSubAck(int error_code, std::shared_ptr<Mqtt5::SubAckPacket> suback);
