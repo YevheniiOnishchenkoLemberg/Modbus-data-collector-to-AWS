@@ -33,11 +33,16 @@ uint8_t *ModbusMaster::getResponseBits()
     return responseBits;
 }
 
-uint8_t *ModbusMaster::readBits(const uint8_t *bytesForValidation)
+size_t ModbusMaster::readBits(const uint8_t *bytesForValidation)
 {
     int rc;
 
     rc = modbus_read_bits(ctx, BITS_ADDRESS, bitsAmount, responseBits);
+
+    if(rc != 1)
+    {
+        printf("Error while reading bits\n");
+    }
 
     if(bytesForValidation)
     {
@@ -56,7 +61,7 @@ uint8_t *ModbusMaster::readBits(const uint8_t *bytesForValidation)
     }
     printf("DONE\n");
 
-    return responseBits;
+    return bitsAmount;
 }
 
 ModbusMaster::~ModbusMaster()

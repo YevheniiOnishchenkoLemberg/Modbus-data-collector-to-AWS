@@ -14,14 +14,14 @@ class ModbusMaster {
 private:
     modbus_t *ctx;
     uint8_t *responseBits;
-    int bitsAmount;
+    size_t bitsAmount;
 
 public:
     ModbusMaster();
     modbus_t*getContext();
     uint8_t *getResponseBits();
 
-    uint8_t *readBits(const uint8_t *bytesForValidation = nullptr);
+    size_t readBits(const uint8_t *bytesForValidation = nullptr);
 
     ~ModbusMaster();
 };
